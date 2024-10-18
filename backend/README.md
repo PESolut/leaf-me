@@ -177,3 +177,48 @@ Authorization: Bearer <your_token_here>
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin feature/my-new-feature`
 5. Submit a pull request
+
+# Set PM2 to start on boot
+
+To ensure our application starts automatically when the server reboots, we need to configure PM2 to start on system boot. This process involves generating a startup script and saving the current PM2 process list.
+
+## Steps:
+
+1. Generate the startup script:
+   ```
+   pm2 startup
+   ```
+   This command will output a line of code that you need to run with sudo privileges. Copy and run that command.
+
+2. Save the current PM2 process list:
+   ```
+   pm2 save
+   ```
+   This command saves the current list of processes, so PM2 knows which applications to start on boot.
+
+3. Verify the setup:
+   Reboot your system and check if your application starts automatically.
+   ```
+   sudo reboot
+   ```
+   After the system comes back online, check the status of your processes:
+   ```
+   pm2 list
+   ```
+
+## Notes:
+- The exact startup command may vary depending on your operating system. PM2 will generate the appropriate command for your system.
+- You may need sudo privileges to set up the startup script.
+- If you make changes to your PM2 process list, remember to run `pm2 save` again to update the saved list.
+
+## Troubleshooting:
+- If your application doesn't start on boot, check the PM2 logs:
+  ```
+  pm2 logs
+  ```
+- Ensure that your application's dependencies are installed globally if necessary.
+
+## References:
+- PM2 Startup Hook Documentation: https://pm2.keymetrics.io/docs/usage/startup/
+
+By completing this task, we ensure that our application will automatically start if the server reboots, improving its reliability and reducing potential downtime.
