@@ -26,10 +26,10 @@ jobs:
               working-directory: ./backend
               run: npm ci
             - name: Build React app
-              working-directory: ./react-fe
+              working-directory: ./backend
               run: npm run build
             - name: Run tests
-              working-directory: ./react-fe
+              working-directory: ./backend
               run: npm test
 
     push-to-main:
