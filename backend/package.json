@@ -8,6 +8,7 @@
     "dbseed": "psql -U postgres -f db/seed.sql",
     "dbmore": "psql -U postgres -f db/moreItems.sql",
     "start": "node server.js",
+    "start:pm2": "pm2 start server.js --node-args=\"--require dotenv/config\"",
     "test": "jest --runInBand",
     "dev": "nodemon server.js"
   },
