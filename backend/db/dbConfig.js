@@ -16,6 +16,7 @@ cn = {
 }
 */
 // combined CN
+console.log(PG_PASSWORD)
 const cn = DATABASE_URL
 	? {
 			connectionString: DATABASE_URL,
