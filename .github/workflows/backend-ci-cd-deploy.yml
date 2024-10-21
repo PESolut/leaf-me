@@ -82,6 +82,6 @@ jobs:
             echo "Removing existing container..."
             docker rm leafme-backend-container || echo "No container to remove"
             echo "Starting new container..."
-            docker run -d --name leafme-backend-container -p 3000:3000 '"$DOCKERHUB_USER"'/leafme-backend:latest || { echo "Docker run failed"; exit 1; }
+            docker run -d --name leafme-backend-container -p 3001:3000 '"$DOCKERHUB_USER"'/leafme-backend:latest || { echo "Docker run failed"; exit 1; }
             echo "Deployment completed successfully"
           '
