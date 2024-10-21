@@ -1,0 +1,82 @@
+name: Deploy
+run-name: ${{ github.actor }} is deploying the Node.js app
+
+on:
+  push:
+    branches: [ main ]
+  workflow_run:
+    workflows: ["Build-And-Test"]
+    types:
+      - completed
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+      
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USER }}/leafme-backend:latest
+
+  deploy-to-ec2:
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USER: ${{ secrets.EC2_USER }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+        run: |
+          # Check for presence of environment variables
+          echo "Checking environment variables..."
+          [ -z "$PRIVATE_KEY" ] && echo "PRIVATE_KEY is missing" || echo "PRIVATE_KEY is set"
+          [ -z "$HOST" ] && echo "HOST is missing" || echo "HOST is set"
+          [ -z "$USER" ] && echo "USER is missing" || echo "USER is set"
+          [ -z "$DOCKERHUB_USER" ] && echo "DOCKERHUB_USER is missing" || echo "DOCKERHUB_USER is set"
+          
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          # Test SSH connection with maximum verbosity
+          ssh -vvv -o StrictHostKeyChecking=no -o ConnectTimeout=60 -i private_key ${USER}@${HOST} 'echo "SSH connection successful"'
+          
+          # If the test is successful, proceed with the deployment
+          ssh -vvv -o StrictHostKeyChecking=no -o ConnectTimeout=60 -i private_key ${USER}@${HOST} '
+            # Add error handling and logging
+            set -e
+            echo "Starting deployment on EC2"
+            echo "Pulling Docker image..."
+            docker pull '"$DOCKERHUB_USER"'/leafme-backend:latest || { echo "Docker pull failed"; exit 1; }
+            echo "Stopping existing container..."
+            docker stop leafme-backend-container || echo "No container to stop"
+            echo "Removing existing container..."
+            docker rm leafme-backend-container || echo "No container to remove"
+            echo "Starting new container..."
+            docker run -d --name leafme-backend-container -p 3000:3000 '"$DOCKERHUB_USER"'/leafme-backend:latest || { echo "Docker run failed"; exit 1; }
+            echo "Deployment completed successfully"
+          '
