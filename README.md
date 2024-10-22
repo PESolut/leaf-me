@@ -11,7 +11,7 @@ Leaf-Me is a full-stack Uber Eats-style delivery platform designed for dispensar
 ## Current State
 
 ### Backend
-The backend is not yet deployed but is fully functional without validations. It supports user authentication, allowing users to sign in and out successfully.
+The backend is deployed and fully functional with Docker. It supports user authentication, allowing users to sign in and out successfully.
 
 - User Management: Users can register, log in, and manage their accounts.
 - Order Processing: The backend can handle order creation and retrieval, ready for integration with the frontends.
@@ -30,7 +30,59 @@ Features include:
 
 Shift focus to developing the Restaurant Frontend for dispensaries to manage and fulfill orders.
 
+## Installation
 
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/leaf-me-backend.git
+   ```
 
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
+3. Set up the environment variables:
+   Create a `.env` file in the root directory and add the following:
+   ```
+   PORT=3001
+   PG_HOST=localhost
+   PG_PORT=5432
+   PG_DATABASE=leafme_db
+   PG_USER=your_postgres_username
+   PG_PASSWORD=your_postgres_password
+   SECRET_TOKEN=your_secret_token
+   ```
 
+4. Initialize the database:
+   ```
+   npm run dbinit
+   ```
+
+5. Seed the database:
+   ```
+   npm run dbseed
+   ```
+
+## Usage
+
+To start the server using Docker:
+
+```
+docker run -d --name leafme-backend-container -p 3001:3000 your-dockerhub-username/leafme-backend:latest
+```
+
+## Deployment
+
+The backend is automatically deployed to an EC2 instance using GitHub Actions when changes are pushed to the main branch. The deployment process includes:
+
+1. Building a Docker image
+2. Pushing the image to Docker Hub
+3. Pulling the latest image on the EC2 instance
+4. Starting a new container with the updated image
+
+Ensure that all necessary secrets (EC2_SSH_PRIVATE_KEY, EC2_HOST, EC2_USER, DOCKERHUB_USER) are set in the GitHub repository settings.
+
+## API Documentation
+
+For detailed information about the API endpoints and their usage, please refer to the README file located in the backend folder of this repository.

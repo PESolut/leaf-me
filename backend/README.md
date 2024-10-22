@@ -178,47 +178,72 @@ Authorization: Bearer <your_token_here>
 4. Push to the branch: `git push origin feature/my-new-feature`
 5. Submit a pull request
 
-# Set PM2 to start on boot
+# Docker Deployment
 
-To ensure our application starts automatically when the server reboots, we need to configure PM2 to start on system boot. This process involves generating a startup script and saving the current PM2 process list.
+This application is containerized using Docker for easy deployment and scalability.
 
-## Steps:
+## Prerequisites
 
-1. Generate the startup script:
+- Docker installed on your system
+- Docker Hub account (for pushing and pulling images)
+
+## Building the Docker Image
+
+To build the Docker image:
+
+```
+docker build -t your-dockerhub-username/leafme-backend:latest .
+```
+
+## Running the Docker Container
+
+To run the Docker container locally:
+
+```
+docker run -d --name leafme-backend-container -p 3001:3000 your-dockerhub-username/leafme-backend:latest
+```
+
+This command maps the container's port 3000 to the host's port 3001.
+
+## Pushing the Docker Image
+
+To push the Docker image to Docker Hub:
+
+```
+docker push your-dockerhub-username/leafme-backend:latest
+```
+
+## Continuous Deployment
+
+This project uses GitHub Actions for continuous integration and deployment. When changes are pushed to the main branch, the following steps are automatically executed:
+
+1. The application is built and tested
+2. A new Docker image is created and pushed to Docker Hub
+3. The new image is deployed to an EC2 instance
+
+For more details, see the `.github/workflows/backend-ci-cd-deploy.yml` file.
+
+## Accessing the Deployed Application
+
+After deployment, the application can be accessed at:
+
+```
+http://your-ec2-instance-ip:3001
+```
+
+Replace `your-ec2-instance-ip` with the actual IP address or domain name of your EC2 instance.
+
+## Troubleshooting
+
+If you encounter issues with the Docker deployment:
+
+1. Check the Docker logs:
    ```
-   pm2 startup
-   ```
-   This command will output a line of code that you need to run with sudo privileges. Copy and run that command.
-
-2. Save the current PM2 process list:
-   ```
-   pm2 save
-   ```
-   This command saves the current list of processes, so PM2 knows which applications to start on boot.
-
-3. Verify the setup:
-   Reboot your system and check if your application starts automatically.
-   ```
-   sudo reboot
-   ```
-   After the system comes back online, check the status of your processes:
-   ```
-   pm2 list
+   docker logs leafme-backend-container
    ```
 
-## Notes:
-- The exact startup command may vary depending on your operating system. PM2 will generate the appropriate command for your system.
-- You may need sudo privileges to set up the startup script.
-- If you make changes to your PM2 process list, remember to run `pm2 save` again to update the saved list.
+2. Ensure all necessary environment variables are set in the `.env` file and properly passed to the Docker container.
 
-## Troubleshooting:
-- If your application doesn't start on boot, check the PM2 logs:
-  ```
-  pm2 logs
-  ```
-- Ensure that your application's dependencies are installed globally if necessary.
+3. Verify that the EC2 instance's security group allows inbound traffic on port 3001.
 
-## References:
-- PM2 Startup Hook Documentation: https://pm2.keymetrics.io/docs/usage/startup/
-
-By completing this task, we ensure that our application will automatically start if the server reboots, improving its reliability and reducing potential downtime.
+For more advanced troubleshooting, refer to the Docker and AWS EC2 documentation.
