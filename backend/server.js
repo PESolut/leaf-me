@@ -11,5 +11,7 @@ require("dotenv").config()
 const PORT = process.env.PORT || 3000
 const localIP = getLocalIpAddress()
 
+console.log(localIP)
+
 // LISTEN
 app.listen(PORT, () => {console.log(`listening on port ${PORT}\nAPI address is: ${localIP}`)})
