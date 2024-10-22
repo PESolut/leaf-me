@@ -4,6 +4,8 @@ run-name: ${{ github.actor }} is deploying the Node.js app
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'backend/**'
   workflow_run:
     workflows: ["Build-And-Test"]
     types:
