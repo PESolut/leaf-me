@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import CONFIG from 'react-native-config';
+import { API_URL } from '@env';
 
 
 export const ContextD = createContext();
@@ -10,7 +10,8 @@ export function useContextProvider() {
     return useContext(ContextD);
   }
 
-const API = 'https://leaf-me-0183706079ed.herokuapp.com';
+const API = API_URL
+console.log(API)
 
   
 const Provider = ({ children }) => {

@@ -84,6 +84,13 @@ jobs:
             echo "Removing existing container..."
             docker rm leafme-backend-container || echo "No container to remove"
             echo "Starting new container..."
-            docker run -d --name leafme-backend-container -p 3000:3000 '"$DOCKERHUB_USER"'/leafme-backend:latest || { echo "Docker run failed"; exit 1; }
+            docker run -d --name leafme-backend-container \
+              -p 3001:3000 \
+              -e PG_HOST=${{ secrets.PG_HOST }} \
+              -e PG_PORT=${{ secrets.PG_PORT }} \
+              -e PG_DATABASE=${{ secrets.PG_DATABASE }} \
+              -e PG_USER=${{ secrets.PG_USER }} \
+              -e PG_PASSWORD=${{ secrets.PG_PASSWORD }} \
+              '"$DOCKERHUB_USER"'/leafme-backend:latest || { echo "Docker run failed"; exit 1; }
             echo "Deployment completed successfully"
           '

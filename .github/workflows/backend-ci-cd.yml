@@ -4,8 +4,12 @@ run-name: ${{ github.actor }} is building and testing the Backend
 on:
     push:
         branches: [ dev ]
+        paths:
+            - 'backend/**'
     pull_request:
         branches: [ dev ]
+        paths:
+            - 'backend/**'
 
 jobs:
     build:
