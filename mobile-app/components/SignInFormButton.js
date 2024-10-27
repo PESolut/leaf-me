@@ -1,28 +1,30 @@
-import { Button, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet, Text } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 10,
+        marginTop: 15,
         // alignContent: 'center',
         borderRadius: 4,
         // marginTop: 75,
-        marginLeft: 10,
+        // marginLeft: 10,
         alignItems: 'center',
         backgroundColor: 'black',
         width: '95%',
-        height: 70,
+        height: 40,
         marginBottom: 10,
     },
     buttonText: {
         fontSize: '16',
-        paddingVertical: '8%',
+        paddingVertical: '3%',
         color: 'white'
     }
 })
 const SignInFormButton = () => {
 
     return (
-        <Button title="Continue"></Button>
+        <TouchableOpacity style={styles.container} onPress={null}>
+            <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
     )
 
 }
