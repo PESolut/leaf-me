@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import styles from './StoreItemShowCartButtonStyles'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { checkIfCurrentUserHasBasket, createNewBasket, populateBasketWithStoreItem } from './Functions';
 import { useUserContext } from '../Providers/UserProvider';
 
@@ -45,6 +45,11 @@ const StoreItemShowCartButton = ({quantity, name, price, storeItemID,userID}) =>
         } else {
             // we do not have a user
             // tell user to sign in!
+            navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'SignIn' }],
+                }))
             console.log('sign in bro!')
 
         }
