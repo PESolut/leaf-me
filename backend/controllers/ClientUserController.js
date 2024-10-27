@@ -88,4 +88,10 @@ clientUser.delete("/:id", async (req, res) => {
     }
 })
 
+// CHECK IF USER EXISTS
+clientUser.post("/check-email", doesAccountExist, async (req, res) => {
+    // If middleware passes (account doesn't exist), send success response
+    res.status(200).json({ message: "Email is available" });
+});
+
 module.exports = clientUser

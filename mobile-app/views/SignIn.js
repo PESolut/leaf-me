@@ -3,14 +3,27 @@ import { View } from "react-native";
 import Header from "../components/Header";
 import SignInForm from "../components/SignInForm";
 import SignInForm2 from "../components/SignInForm2";
+import axios from 'axios';
+import { useContextProvider } from '../Providers/Provider';
 
 const SignIn = () => {
+    const { API } = useContextProvider();
     const [stage, setStage] = useState(1);
     const [isNew, setIsNew] = useState(null);
     const [userInput, setUserInput] = useState({
         email: '',
         password: ''
     });
+    
+
+    const checkEmailExists = async (email) => {
+        axios
+        .post(`${API}/users`,{email:email,password:null})
+        .then(({ data }) => {
+            console.log(data)
+        })
+        .catch((error) => console.error(error))
+    };
 
     const handleEmailSubmit = async (email) => {
         try {
