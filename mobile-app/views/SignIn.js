@@ -29,11 +29,14 @@ const SignIn = () => {
     const handleEmailSubmit = async () => {
         console.log(userInput.email)
         try {
-            
             const userExists = await checkEmailExists(userInput.email);
             console.log('userExists response:',userExists)
             // setUserInput(prev => ({ ...prev, userInput }));
-            setIsNew(!userExists);
+            if(userExists.message == 'Email is available'){
+                setIsNew(true)
+            } else {
+                setIsNew(false)
+            }
             setStage(2);
         } catch (error) {
             console.error('Error checking email:', error);
