@@ -11,8 +11,11 @@ const StoreItemShowCartButton = ({quantity, name, price, storeItemID,userID}) =>
     const { setTriggerRerenderFlag, triggerRerenderFlag, toggleRerenderFlag } = useUserContext()
  
     const handlePress =  async () => {
-        
-        // check if user has basket
+
+        // before we check if a user has a basket; lets confirm that we have a registered user!
+        if(userID){
+            // we do have a user
+                 // check if user has basket
         let usersBasketID = await checkIfCurrentUserHasBasket(userID)
         console.log('storeItemShow handlePress - return for checkIfCurrentUserHasBasket:',usersBasketID)
         console.log('storeItemID:',storeItemID)
@@ -38,6 +41,15 @@ const StoreItemShowCartButton = ({quantity, name, price, storeItemID,userID}) =>
         toggleRerenderFlag(triggerRerenderFlag)
         console.log('\nLog2\n','triggerRerenderFlag',triggerRerenderFlag)
         toggleRerenderFlag(triggerRerenderFlag)
+
+        } else {
+            // we do not have a user
+            // tell user to sign in!
+            console.log('sign in bro!')
+
+        }
+        
+   
 
     }
 

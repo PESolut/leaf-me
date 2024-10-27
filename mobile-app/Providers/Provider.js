@@ -16,7 +16,7 @@ console.log(API)
   
 const Provider = ({ children }) => {
   const [authToken, setAuthToken] = useState('abcdtoken');
-  const [userID, setUserID] = useState('1');
+  const [userID, setUserID] = useState(null);
 
   return (
     <ContextD.Provider
