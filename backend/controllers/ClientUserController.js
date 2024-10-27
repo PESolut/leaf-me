@@ -89,9 +89,16 @@ clientUser.delete("/:id", async (req, res) => {
 })
 
 // CHECK IF USER EXISTS
-clientUser.post("/check-email", doesAccountExist, async (req, res) => {
-    // If middleware passes (account doesn't exist), send success response
-    res.status(200).json({ message: "Email is available" });
+clientUser.post("/check-email", async (req, res, next) => {
+    try {
+        await doesAccountExist(req, res, () => {
+            // If middleware passes (account doesn't exist)
+            res.status(200).json({ message: "Email is available" });
+        });
+    } catch (error) {
+        // If middleware fails (account exists)
+        res.status(200).json({ message: "Email does not exist" });
+    }
 });
 
 module.exports = clientUser
