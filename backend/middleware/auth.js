@@ -35,9 +35,9 @@ const userLogin = async (req, res, next) => {
 const doesAccountExist = async (req, res, next) => {
   const { email } = req.body;
   const credentials = await getLoginByEmail(email)
-  // if there is no error message = there is an account, so send error message
+  // if there is no error message = there is an account
   if(credentials.email) {
-    res.status(401).json({ error: ` there is an account already linked to ${email}`})
+    res.status(200).json({ message: `An account is already linked to ${email}` })
   } else {
     console.log('account does not exist')
     next();

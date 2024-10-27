@@ -17,12 +17,13 @@ const SignIn = () => {
     
 
     const checkEmailExists = async (email) => {
-        axios
-        .post(`${API}/users/check-email`,{email:email})
-        .then(({ data }) => {
-            // console.log(data)
-        })
-        .catch((error) => console.error(error))
+        try {
+            const response = await axios.post(`${API}/users/check-email`, { email: email });
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     };
 
     const handleEmailSubmit = async () => {
@@ -30,7 +31,8 @@ const SignIn = () => {
         try {
             
             const userExists = await checkEmailExists(userInput.email);
-            console.log('userExists:',userExists)
+            console.log('userExists response:',userExists)
+            // setUserInput(prev => ({ ...prev, userInput }));
             setIsNew(!userExists);
             setStage(2);
         } catch (error) {
