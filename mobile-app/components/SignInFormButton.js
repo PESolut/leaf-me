@@ -19,10 +19,11 @@ const styles = StyleSheet.create({
         color: 'white'
     }
 })
-const SignInFormButton = () => {
+
+const SignInFormButton = ({handleEmailSubmit}) => {
 
     return (
-        <TouchableOpacity style={styles.container} onPress={null}>
+        <TouchableOpacity style={styles.container} onPress={handleEmailSubmit}>
             <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
     )

@@ -2,7 +2,7 @@ import React from "react";
 import { Text, TextInput, StyleSheet, View } from "react-native";
 import SignInFormButton from "./SignInFormButton";
 
-const SignInForm = () => {
+const SignInForm = ({handleEmailSubmit}) => {
 
     const styles = StyleSheet.create({
         container: {
@@ -36,7 +36,7 @@ const SignInForm = () => {
                     placeholder=" enter your email here "
                 ></TextInput>
             </View>
-            <SignInFormButton/>
+            <SignInFormButton handleEmailSubmit={handleEmailSubmit}/>
         </View>
     )
 }
