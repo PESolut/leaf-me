@@ -18,7 +18,7 @@ const SignIn = () => {
 
     const checkEmailExists = async (email) => {
         axios
-        .post(`${API}/users`,{email:email,password:null})
+        .post(`${API}/users/check-email`,{email:email,password:null})
         .then(({ data }) => {
             console.log(data)
         })
