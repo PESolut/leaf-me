@@ -82,9 +82,11 @@ const SignIn = () => {
             )}
             {stage === 2 && (
                 <SignInForm2 
-                    onSubmit={handlePasswordSubmit}
+                    handlePasswordSubmit={handlePasswordSubmit}
+                    setUserInput={setUserInput}
                     isNewUser={isNew}
                     userEmail={userInput.email}
+                    userPassword={userInput.password}
                     stage={stage}
                     isNew={isNew}
                 />
