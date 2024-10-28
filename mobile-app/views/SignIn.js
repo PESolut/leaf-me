@@ -17,19 +17,26 @@ const SignIn = () => {
     
 
     const checkEmailExists = async (email) => {
-        axios
-        .post(`${API}/users/check-email`,{email:email,password:null})
-        .then(({ data }) => {
-            console.log(data)
-        })
-        .catch((error) => console.error(error))
+        try {
+            const response = await axios.post(`${API}/users/check-email`, { email: email });
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     };
 
-    const handleEmailSubmit = async (email) => {
+    const handleEmailSubmit = async () => {
+        console.log(userInput.email)
         try {
-            const userExists = await checkEmailExists(email);
-            setUserInput(prev => ({ ...prev, email }));
-            setIsNew(!userExists);
+            const userExists = await checkEmailExists(userInput.email);
+            console.log('userExists response:',userExists)
+            // setUserInput(prev => ({ ...prev, userInput }));
+            if(userExists.message == 'Email is available'){
+                setIsNew(true)
+            } else {
+                setIsNew(false)
+            }
             setStage(2);
         } catch (error) {
             console.error('Error checking email:', error);
@@ -67,12 +74,19 @@ const SignIn = () => {
         <View>
             <Header />
             {stage === 1 && (
-                <SignInForm handleEmailSubmit={handleEmailSubmit} />
+                <SignInForm 
+                    handleEmailSubmit={handleEmailSubmit}
+                    email={userInput.email}
+                    setUserInput={setUserInput}
+                />
             )}
             {stage === 2 && (
                 <SignInForm2 
                     onSubmit={handlePasswordSubmit}
                     isNewUser={isNew}
+                    userEmail={userInput.email}
+                    stage={stage}
+                    isNew={isNew}
                 />
             )}
         </View>
