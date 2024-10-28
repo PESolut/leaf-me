@@ -43,7 +43,7 @@ const SignInForm2 = ({ handlePasswordSubmit, userEmail, stage, isNew, userPasswo
 
                 ></TextInput>
             </View>
-            <SignInFormButton />
+            <SignInFormButton handlePasswordSubmit={handlePasswordSubmit} type={'password'} />
         </View>
     )
 }

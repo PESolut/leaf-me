@@ -20,9 +20,18 @@ const styles = StyleSheet.create({
     }
 })
 
-const SignInFormButton = ({handleEmailSubmit}) => {
+const SignInFormButton = ({handleEmailSubmit, handlePasswordSubmit, type}) => {
     return (
-        <TouchableOpacity style={styles.container} onPress={() => handleEmailSubmit()}>
+        <TouchableOpacity 
+            style={styles.container} 
+            onPress={() => {
+                if (type === 'email') {
+                    handleEmailSubmit();
+                } else if (type === 'password') {
+                    handlePasswordSubmit();
+                }
+            }}
+        >
             <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
     )
