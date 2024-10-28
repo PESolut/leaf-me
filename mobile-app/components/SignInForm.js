@@ -38,7 +38,7 @@ const SignInForm = ({ handleEmailSubmit, email, setUserInput }) => {
                     onChangeText={(text) => setUserInput(prev => ({ ...prev, email: text }))}
                 ></TextInput>
             </View>
-            <SignInFormButton handleEmailSubmit={handleEmailSubmit}/>
+            <SignInFormButton type={'email'} handleEmailSubmit={handleEmailSubmit}/>
         </View>
     )
 }

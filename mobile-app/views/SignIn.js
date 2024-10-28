@@ -43,9 +43,10 @@ const SignIn = () => {
         }
     };
 
-    const handlePasswordSubmit = async (password) => {
+    const handlePasswordSubmit = async () => {
         try {
-            setUserInput(prev => ({ ...prev, password }));
+            // setUserInput(prev => ({ ...prev, password }));
+            console.log(userInput)
             
             if (isNew) {
                 await createNewUser(userInput);
