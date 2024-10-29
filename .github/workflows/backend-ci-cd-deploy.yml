@@ -49,6 +49,9 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USER }}/leafme-backend:latest
+          no-cache: true
+          build-args: |
+            BUILDTIME=${{ github.sha }}
 
   deploy-to-ec2:
     needs: build-and-deploy
