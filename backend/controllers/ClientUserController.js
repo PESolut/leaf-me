@@ -38,16 +38,22 @@ clientUser.get("/:id", async (req, res) => {
 })
 
 // CREATE / REGISTER
-clientUser.post("/", hashPass, doesAccountExist, async (req, res) => {
-    const newClientUser = await createClientUser(req.body)
-
-    if(!newClientUser.message){
-        res.status(200).json(newClientUser)
+clientUser.post("/", doesAccountExist, hashPass, async (req, res) => {
+    try {
+        console.log("Creating user with data:", {
+            ...req.body,
+            password: '[REDACTED]'
+        });
+        
+        const newUser = await createClientUser(req.body);
+        console.log("Database response:", newUser);
+        
+        res.status(201).json(newUser);
+    } catch (error) {
+        console.error("Error creating user:", error);
+        res.status(500).json({ error: error.message });
     }
-    else {
-        res.status(500).json({error: newClientUser.message})
-    }
-})
+});
 
 // LOGIN
 clientUser.post("/login", userLogin, async (req, res) => {
