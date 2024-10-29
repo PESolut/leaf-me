@@ -64,7 +64,8 @@ const hashPass = async (req, res, next) => {
         req.body.password = hash;
         next();
     } catch (error) {
-        res.status(500).json({ error: "Error processing password" });
+        res.status(500).json({ error: "Error processing password: "+error});
+        console.log(error)
     }
 };
 
