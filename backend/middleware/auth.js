@@ -46,7 +46,12 @@ const doesAccountExist = async (req, res, next) => {
 
 const hashPass = async (req, res, next) => {
     try {
-        const salt = await bcrypt.genSalt();
+        const salt = await bcrypt.genSalt(10);
+
+        if (!req.body.password) {
+          return res.status(400).json({ error: "Password is required" });
+        }
+        console.log("Incoming password type:", typeof req.body.password);
         const hash = await bcrypt.hash(req.body.password, salt);
         req.body.password = hash;
         next();
