@@ -45,33 +45,45 @@ const doesAccountExist = async (req, res, next) => {
 }
 
 const hashPass = async (req, res, next) => {
-  console.log('req.body.password:',req.body.password)
     try {
+        console.log('Starting hashPass...');
+        
+        if (!req.body) {
+            console.error('No request body found');
+            return res.status(400).json({ error: "No request body" });
+        }
+
+        console.log('Password from request:', typeof req.body.password, req.body.password ? 'exists' : 'undefined');
+        
         if (!req.body.password) {
+            console.error('No password in request body');
             return res.status(400).json({ error: "Password is required" });
         }
 
-        let salt;
         try {
-            salt = await bcrypt.genSalt(10);
-        } catch (saltError) {
-            console.error("Salt generation error:", saltError);
-            return res.status(500).json({ error: "Failed to generate salt" });
+            console.log('Generating salt...');
+            const salt = await bcrypt.genSalt(10);
+            console.log('Salt generated successfully');
+            
+            console.log('Hashing password...');
+            const hash = await bcrypt.hash(req.body.password, salt);
+            console.log('Password hashed successfully');
+            
+            req.body.password = hash;
+            next();
+        } catch (innerError) {
+            console.error('Bcrypt operation failed:', innerError);
+            return res.status(500).json({ 
+                error: "Error processing password",
+                details: innerError.message 
+            });
         }
-
-        let hash;
-        try {
-            hash = await bcrypt.hash(req.body.password, salt);
-        } catch (hashError) {
-            console.error("Hash generation error:", hashError);
-            return res.status(500).json({ error: "Failed to hash password" });
-        }
-
-        req.body.password = hash;
-        next();
     } catch (error) {
-        console.error("General error in hashPass:", error);
-        return res.status(500).json({ error: "Error processing password" });
+        console.error('Outer error in hashPass:', error);
+        return res.status(500).json({ 
+            error: "Error processing password",
+            details: error.message 
+        });
     }
 };
 
