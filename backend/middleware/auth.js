@@ -46,26 +46,31 @@ const doesAccountExist = async (req, res, next) => {
 
 const hashPass = async (req, res, next) => {
     try {
-      console.log(req.body)
-      
-        const salt = await bcrypt.genSalt(10);
-        if(!salt){
-          return res.status(400).json({ error: "Problem salting the password D:"})
+        if (!req.body.password) {
+            return res.status(400).json({ error: "Password is required" });
         }
 
-        if (!req.body.password) {
-          return res.status(400).json({ error: "Password is required" });
+        let salt;
+        try {
+            salt = await bcrypt.genSalt(10);
+        } catch (saltError) {
+            console.error("Salt generation error:", saltError);
+            return res.status(500).json({ error: "Failed to generate salt" });
         }
-        console.log("Incoming password type:", typeof req.body.password);
-        const hash = await bcrypt.hash(req.body.password, salt);
-        if(!hash){
-          return res.status(400).json({ error: "Problem salting the password D:"})
+
+        let hash;
+        try {
+            hash = await bcrypt.hash(req.body.password, salt);
+        } catch (hashError) {
+            console.error("Hash generation error:", hashError);
+            return res.status(500).json({ error: "Failed to hash password" });
         }
+
         req.body.password = hash;
         next();
     } catch (error) {
-        res.status(500).json({ error: "Error processing password: "+error});
-        console.log(error)
+        console.error("General error in hashPass:", error);
+        return res.status(500).json({ error: "Error processing password" });
     }
 };
 
