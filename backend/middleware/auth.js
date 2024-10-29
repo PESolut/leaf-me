@@ -45,6 +45,7 @@ const doesAccountExist = async (req, res, next) => {
 }
 
 const hashPass = async (req, res, next) => {
+  console.log(req.body.password)
     try {
         if (!req.body.password) {
             return res.status(400).json({ error: "Password is required" });
