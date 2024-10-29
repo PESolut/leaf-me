@@ -44,18 +44,18 @@ const doesAccountExist = async (req, res, next) => {
   }
 }
 
-const hashPass = (req, res, next) => {
-    bcrypt.genSalt().then((salt) => {
-      bcrypt
-        .hash(req.body.password, salt)
-        .then((hash) => {
-          req.body.password = hash;
-        })
-        .then(() => next());
-    });
-  };
+const hashPass = async (req, res, next) => {
+    try {
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(req.body.password, salt);
+        req.body.password = hash;
+        next();
+    } catch (error) {
+        res.status(500).json({ error: "Error processing password" });
+    }
+};
 
-  const verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!token) {

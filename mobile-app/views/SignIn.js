@@ -43,13 +43,31 @@ const SignIn = () => {
         }
     };
 
+    const createUserSendToBE = async (userInput) => {
+        try {
+            console.log('userInput:',userInput)
+            const response = await axios.post(`${API}/users/`, { 
+                email: userInput.email, 
+                password: userInput.password,
+                name: null,
+                address: null,
+                latitude: null,
+                longitude: null
+            })
+            console.log('response:',response,'userInput:',userInput)
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+    }
+
     const handlePasswordSubmit = async () => {
         try {
             // setUserInput(prev => ({ ...prev, password }));
             console.log(userInput)
             
             if (isNew) {
-                await createNewUser(userInput);
+                await createUserSendToBE(userInput);
                 setStage(0);
             } else {
                 const isValid = await verifyUser(userInput);
